@@ -1,0 +1,77 @@
+//该代码仅按请求顺序依次接送 
+#include<stdio.h>
+int main()
+{
+	int a[5],b[5],c[5],st=1,i,j,temp,result,t,zt=0;
+	for(i=0;i<5;i++)
+	{
+		scanf("%d%d%d",&a[i],&b[i],&c[i]);
+	}//数据输入 
+	for(i=0;i<5;i++)
+	{
+		for(j=0;j<4-i;j++)
+		{
+			if(a[j]>a[j+1])
+			{
+				temp=a[j+1];a[j+1]=a[j];a[j]=temp;
+				temp=b[j+1];b[j+1]=b[j];b[j]=temp;
+				temp=c[j+1];c[j+1]=c[j];c[j]=temp;
+			}
+		}
+	}//将请求按时间排序 
+	if(c[0]==1)
+	result=1;
+	else
+	result=10;//result是目的层数 
+	if(c[0]==st)//电梯需要折返的情况 
+	{
+		t=(b[0]-1)*2+1+a[0];//计算停靠时刻 
+		printf("%d时，停靠在%d\n",t,result);
+	}
+	else//电梯不需要折返 
+	{
+		t=a[0]+10;
+		printf("%d时，停靠在%d\n",t,result);
+	}
+	zt=t-a[0];t=t+1;//zt是总等待时间，t是时刻 
+	for(i=1;i<5;i++)
+	{
+	if(result==1)
+	st=1;
+	else
+	st=0;//根据上一次电梯的层数确定电梯的位置 
+	if(c[i]==1)
+	result=1;
+	else
+	result=10;
+	if(a[i]>t)//如果请求时刻在上一个请求之后 
+	{
+		if(c[1]==st)
+		{
+			t=a[i]+2*(b[i]-1)+1;
+			printf("%d时，停靠在%d\n",t,result);
+		}
+		else
+		{
+			t=a[i]+10;
+			printf("%d时，停靠在%d\n",t,result);
+		}
+	}
+	else//如果请求时刻在上一个请求之前 
+	{
+		if(c[i]==st)
+		{
+			t=t+2*(b[i]-1)+1;
+			printf("%d时，停靠在%d\n",t,result);
+		}
+		else
+		{
+			t=t+10;
+			printf("%d时，停靠在%d\n",t,result);
+		}
+	}
+	zt=zt+t-a[i];t=t+1;
+	}
+	printf("乘客等待时间为%d",zt);
+	return 0;
+}
